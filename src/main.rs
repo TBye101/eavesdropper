@@ -1,24 +1,46 @@
 /*
+
+    https://crates.io/crates/cargo-inspect
+
+    Testing:
+    https://crates.io/crates/static_assertions
+    https://doc.rust-lang.org/rust-by-example/testing/unit_testing.html
+
+    db:
+    https://github.com/tikv/tikv
+
+    performance:
+    https://github.com/async-rs/async-std
+    https://github.com/tokio-rs/tokio
+
+    Analysis:
     https://crates.io/crates/pcap
     https://crates.io/crates/etherparse
-    https://crates.io/crates/cargo-inspect
-    https://crates.io/crates/sqlx
-    https://crates.io/crates/static_assertions
-
     https://ip-api.com/
+
+    https://crates.io/crates/clap or preferably https://crates.io/crates/pico-args
+
 */
 
 extern crate etherparse;
 
+use std::sync::Arc;
 use std::thread::JoinHandle;
-use etherparse::PacketHeaders;
 use pcap::Device;
 
+use log_t::logging_abstraction::Logger;
+use log_t::logging_implementations::FileLogger;
+
 fn main() {
+    let log = FileLogger::new_from_static_string("eavesdropping_log.txt").ok().unwrap();
+    let shared_log = Arc::new(log);
+
     let mut listener_threads: Vec<JoinHandle<()>> = Vec::new();
     for device in Device::list().unwrap() {
+        shared_log.write(format!("Listening to device: {:?}", device));
         println!("Listening to device: {:?}", device);
-        let join_handle = std::thread::spawn(|| {
+        let shared_log_clone = shared_log.clone();
+        let join_handle = std::thread::spawn(move || {
             let device_name = device.name.clone();
             let cap_wrapped = device.open();
             if cap_wrapped.is_ok() {
@@ -27,14 +49,13 @@ fn main() {
                 let mut count = 0;
     
                 while let Ok(packet) = cap.next() {
-                    //parsePacket(&packet);
                     count += 1;
-                    println!("Number of packets captured: {:?} captured by: {:?}", count, device_name);
+                    shared_log_clone.write(format!("Number of packets captured: {:?} captured by: {:?}", count, device_name));
                     savefile.write(&packet);
                 }
             }
             else {
-                println!("Couldn't listen to {:?}", device_name);
+                shared_log_clone.write(format!("Couldn't listen to {:?}", device_name));
             }
         });
         listener_threads.push(join_handle);
