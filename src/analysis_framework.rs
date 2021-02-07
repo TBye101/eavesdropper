@@ -11,6 +11,7 @@ use semver::Version;
 use static_assertions::*;
 
 ///Used to specify that a module requires another module to be run before it can be run.
+#[derive(Eq, PartialEq)]
 pub struct Dependency {
     pub name: &'static str,
     pub version_requirement: VersionReq
@@ -37,6 +38,6 @@ pub trait AnalysisModule {
     ///Called when the framework is ready for the module to perform its analysis.
     ///table_names: The names of the tables that have already been created.
     ///Should return the names of the tables that have been created by this module. 
-    fn analyze(&self, table_names: Vec<String>) -> Vec<String>; 
+    fn analyze(&self, table_names: &Vec<String>) -> Vec<String>; 
 }
 assert_obj_safe!(AnalysisModule);

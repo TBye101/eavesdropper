@@ -1,4 +1,37 @@
 /*
+Modules to make:
+
+WhoIs
+* Performs WhoIs lookups on every IP
+
+Protocol Detector
+* Determines what protocol each packet is using
+
+Virus/Malware detector
+* Detects virus or malware via their network activity
+
+Encrypted Connection cracking
+* Brute forcing for breaking encrypted connections
+
+unencrypted DNS lookup analyzer
+
+Handshake interceptor
+* Intercept handshakes to decrypt packets
+
+Program analyzer
+* Guess/Determine what program sent the packets
+
+*/
+
+/*
+    Lints:
+    https://crates.io/crates/clippy
+
+
+    Hardcore security:
+    https://crates.io/crates/scrypt
+
+
 
     https://crates.io/crates/cargo-inspect
 
@@ -9,6 +42,8 @@
     https://crates.io/crates/static_assertions
     https://doc.rust-lang.org/rust-by-example/testing/unit_testing.html
     https://crates.io/crates/assert_cmd
+    https://github.com/AltSysrq/proptest
+    https://github.com/project-oak/rust-verification-tools
 
     db:
     https://github.com/spacejam/sled
