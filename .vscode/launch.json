@@ -8,12 +8,12 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug",
-            "program": "${workspaceFolder}/target/debug/eavesdropper",
+            "program": "${workspaceFolder}/target/debug/ecli",
             "args": [],
             "cwd": "${workspaceFolder}/target/debug",
             "env": {"RUST_BACKTRACE": "1"},
             "sourceLanguages": ["rust"],
-            "console": "integratedTerminal"
+            "console": "externalTerminal"
 
         }
     ]

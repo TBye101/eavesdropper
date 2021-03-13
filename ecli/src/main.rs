@@ -71,8 +71,10 @@ use rustyline::Editor;
 
 fn main() {
     let listen_command: Box<dyn cliargs_t::Command> = Box::new(listen_command::ListenCommand {});
+    let analyze_command: Box<dyn cliargs_t::Command> = Box::new(analyze_command::AnalyzeCommand {});
     let mut commands = vec![
-        listen_command
+        listen_command,
+        analyze_command
     ];
     let commander = cliargs_t::Commander::new(&mut commands);
 
