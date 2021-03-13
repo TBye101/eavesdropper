@@ -1,0 +1,13 @@
+[package]
+name = "emodules"
+version = "0.1.0"
+authors = ["Thomas Bye <ThomasBye1@gmail.com>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+
+#My crates and in this workspace
+eframework = { path = "../eframework" }

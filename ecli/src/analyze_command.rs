@@ -1,12 +1,9 @@
 extern crate libloading;
 
-#[path = "./analysis_framework.rs"]
-mod analysis_framework;
-
 use std::{collections::HashMap};
 
-use crate::analyze_command::analysis_framework::AnalysisModule;
 use cliargs_t::{Command, Flag};
+use eframework::analysis_framework::AnalysisModule;
 use libloading::Error;
 use petgraph::{Directed, graphmap::{GraphMap}};
 
@@ -139,7 +136,6 @@ impl AnalyzeCommand {
                 }
             }
         }
-
         return true;
     }
 

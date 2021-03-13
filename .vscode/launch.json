@@ -12,7 +12,8 @@
             "args": [],
             "cwd": "${workspaceFolder}/target/debug",
             "env": {"RUST_BACKTRACE": "1"},
-            "sourceLanguages": ["rust"]
+            "sourceLanguages": ["rust"],
+            "console": "integratedTerminal"
 
         }
     ]

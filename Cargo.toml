@@ -1,20 +1,7 @@
-[package]
-name = "eavesdropper"
-version = "0.1.0"
-authors = ["Thomas Bye <ThomasBye1@outlook.com>"]
-edition = "2018"
+[workspace]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-pcap = "0.7.0"
-rustyline = "7.1.0"
-static_assertions = "1.1.0"
-semver = "0.11.0"
-cliargs_t = "0.1.0"
-libloading = "0.6.7"
-petgraph = "0.5.1"
-
-etherparse = "0.9.0"
-log_t = "0.1.0"
-sled = "0.34.6"
+members = [
+    "ecli",
+    "eframework",
+    "emodules"
+]
