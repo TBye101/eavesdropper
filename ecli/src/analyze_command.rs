@@ -1,6 +1,6 @@
 extern crate libloading;
 
-use std::{collections::HashMap};
+use std::{collections::HashMap, ops::Deref};
 
 use cliargs_t::{Command, Flag};
 use eframework::analysis_framework::AnalysisModule;
@@ -41,13 +41,15 @@ impl AnalyzeCommand {
         }
 
         let lib = lib_load.unwrap();
-        let module_load: Result<libloading::Symbol<extern "Rust" fn() -> Vec<Box<dyn AnalysisModule>>>, Error>;
+        let module_load: Result<libloading::Symbol<extern "Rust" fn() -> Box<Vec<Box<dyn AnalysisModule>>>>, Error>;
         unsafe {
             module_load = lib.get(b"get_modules");
         }
 
         if module_load.is_ok() {
-            return Ok(module_load.unwrap()());
+            let fetch_function = module_load.ok().unwrap();
+            let loaded_analyzers = *fetch_function();
+            return Ok(loaded_analyzers);
         }
         else {
             println!("Error loading module: {}", module_path);
@@ -140,10 +142,10 @@ impl AnalyzeCommand {
     }
 
     ///Executes all modules in a ~~multi-threaded~~ single threaded manner.
-    fn run_all_modules(&self, module_execution_order: Vec<Box<dyn AnalysisModule>>) {
+    fn run_all_modules(&self, module_execution_order: Vec<Box<dyn AnalysisModule>>, pcap_input_directory: &String) {
         let mut table_names = Vec::new();
         for module in module_execution_order {
-            let new_tables = module.analyze(&table_names);
+            let new_tables = module.analyze(&table_names, pcap_input_directory);
             table_names.extend(new_tables);
         }
     }
@@ -161,7 +163,7 @@ impl Command for AnalyzeCommand {
         let discovered_modules = self.parse_analyzer_plugins(module_directory.to_string());
         let execution_order = self.construct_execution_list(discovered_modules);
         if execution_order.is_some() {
-            self.run_all_modules(execution_order.unwrap());
+            self.run_all_modules(execution_order.unwrap(), flags.get_key_value("p").unwrap().1);
         }
         else {
             println!("Can't prepare modules for execution.");

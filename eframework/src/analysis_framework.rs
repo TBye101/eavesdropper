@@ -18,6 +18,7 @@ pub struct Dependency {
 }
 
 ///Holds information about a module.
+#[repr(C)]
 pub struct ModuleInfo {
     ///The name of the module.
     pub name: &'static str,
@@ -38,6 +39,6 @@ pub trait AnalysisModule {
     ///Called when the framework is ready for the module to perform its analysis.
     ///table_names: The names of the tables that have already been created.
     ///Should return the names of the tables that have been created by this module. 
-    fn analyze(&self, table_names: &Vec<String>) -> Vec<String>; 
+    fn analyze(&self, table_names: &Vec<String>, pcap_input_directory: &String) -> Vec<String>; 
 }
 assert_obj_safe!(AnalysisModule);

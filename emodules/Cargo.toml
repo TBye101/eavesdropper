@@ -8,6 +8,7 @@ edition = "2018"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+semver = "0.11.0"
 
 #My crates and in this workspace
 eframework = { path = "../eframework" }

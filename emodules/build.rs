@@ -19,6 +19,7 @@ fn main() {
 
     let moduleDirCreated = fs::create_dir(testModuleDir.clone());
     let pcapDirCreated = fs::create_dir(pcapDir.clone());
+    let deletedOld = fs::remove_file(copiedLibPath.clone());
     let copied = fs::copy(libPath.clone(), copiedLibPath.clone());
 
     if copied.is_err() {
@@ -36,5 +37,11 @@ fn main() {
         println!("pcap dir creation error: {}", err);
     }
 
-    println!("cargo:rerun-if-changed=build.rs");
+    if deletedOld.is_err() {
+        let err = deletedOld.err().unwrap();
+        println!("deleted old creation error: {}", err);
+    }
+    else {
+        println!("Deleted old lib");
+    }
 }
