@@ -12,3 +12,5 @@ pub extern "Rust" fn get_modules() -> Box<Vec<Box<dyn AnalysisModule>>> {
     println!("Number of modules returning: {}", official_modules.len());
     return Box::new(official_modules);
 }
+
+//https://docs.rs/abi_stable/0.9.3/abi_stable/
