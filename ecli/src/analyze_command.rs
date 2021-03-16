@@ -2,6 +2,7 @@ extern crate libloading;
 
 use std::{collections::HashMap, ops::Deref};
 
+use abi_stable::std_types::{RString, RVec};
 use cliargs_t::{Command, Flag};
 use eframework::analysis_framework::AnalysisModule;
 use libloading::Error;
@@ -35,38 +36,41 @@ impl AnalyzeCommand {
 
     ///Loads a plugin library and returns the analyzers from it.
     fn load_module(&self, module_path: String) -> Result<Vec<Box<dyn AnalysisModule>>, String> {
-        let lib_load = libloading::Library::new(&module_path);
-        if lib_load.is_err() {
-            return Err(lib_load.err().unwrap().to_string());
-        }
+        
 
-        let lib = lib_load.unwrap();
-        let module_load: Result<libloading::Symbol<extern "Rust" fn() -> Box<Vec<Box<dyn AnalysisModule>>>>, Error>;
-        unsafe {
-            module_load = lib.get(b"get_modules");
-        }
+        todo!()
+        // let lib_load = libloading::Library::new(&module_path);
+        // if lib_load.is_err() {
+        //     return Err(lib_load.err().unwrap().to_string());
+        // }
 
-        if module_load.is_ok() {
-            let fetch_function = module_load.ok().unwrap();
-            let loaded_analyzers = *fetch_function();
-            return Ok(loaded_analyzers);
-        }
-        else {
-            println!("Error loading module: {}", module_path);
-            return Err(module_load.err().unwrap().to_string());
-        }
+        // let lib = lib_load.unwrap();
+        // let module_load: Result<libloading::Symbol<extern "Rust" fn() -> Box<Vec<Box<dyn AnalysisModule>>>>, Error>;
+        // unsafe {
+        //     module_load = lib.get(b"get_modules");
+        // }
+
+        // if module_load.is_ok() {
+        //     let fetch_function = module_load.ok().unwrap();
+        //     let loaded_analyzers = *fetch_function();
+        //     return Ok(loaded_analyzers);
+        // }
+        // else {
+        //     println!("Error loading module: {}", module_path);
+        //     return Err(module_load.err().unwrap().to_string());
+        // }
     }
 
     ///Returns a vec with an order to execute modules in, or None should there be a dependency issue or cycle.
     ///Note: This ordering doesn't take into account parallel execution with different execution times per task.
-    fn construct_execution_list(&self, mut modules: Vec<Box<dyn AnalysisModule>>) -> Option<Vec<Box<dyn AnalysisModule>>> {
+    fn construct_execution_list(&self, mut modules: Vec<Box<dyn AnalysisModule>>) -> Option<RVec<Box<dyn AnalysisModule>>> {
         let mut id_to_module: HashMap<usize, Box<dyn AnalysisModule>> = HashMap::new();
-        let mut name_to_id: HashMap<&'static str, usize> = HashMap::new();
+        let mut name_to_id: HashMap<RString, usize> = HashMap::new();
         
         while let Some(item) = modules.pop() {
             let module_info = item.get_info();
             id_to_module.insert(id_to_module.len(), item);
-            let duplicate = name_to_id.insert(module_info.name, name_to_id.len());
+            let duplicate = name_to_id.insert(module_info.name.clone(), name_to_id.len());
             if duplicate.is_some() {
                 println!("Two modules with the same name have been found, stopping execution. The name: {}", module_info.name);
                 return None;
@@ -90,7 +94,7 @@ impl AnalyzeCommand {
                 return None;
             },
             Ok(order) => {
-                let mut execution_order: Vec<Box<dyn AnalysisModule>> = Vec::new();
+                let mut execution_order: RVec<Box<dyn AnalysisModule>> = RVec::new();
                 for module_id in order {
                     execution_order.push(id_to_module.remove(&module_id).unwrap());
                 }
@@ -102,14 +106,14 @@ impl AnalyzeCommand {
 
     ///Builds the dependency graph.
     ///Returns None if there are cyclic dependencies.
-    fn build_dependency_graph(&self, id_to_module: &HashMap<usize, Box<dyn AnalysisModule>>, name_to_id: &HashMap<&'static str, usize>) -> Option<GraphMap<usize, (), Directed>> {
+    fn build_dependency_graph(&self, id_to_module: &HashMap<usize, Box<dyn AnalysisModule>>, name_to_id: &HashMap<RString, usize>) -> Option<GraphMap<usize, (), Directed>> {
         let mut dependency_graph: GraphMap<usize, (), Directed> = GraphMap::new();
 
         for module in id_to_module {
             dependency_graph.add_node(*module.0);
 
             for dependency in module.1.get_info().dependencies {
-                let dependency_id = name_to_id[dependency.name];
+                let dependency_id = name_to_id[&dependency.name];
                 dependency_graph.add_edge(*module.0, dependency_id, ());
             }
         }
@@ -118,12 +122,12 @@ impl AnalyzeCommand {
     }
 
     ///Verifies that all dependencies are found and that their versions satisfy any requirements.
-    fn are_dependencies_valid(&self, id_to_module: &HashMap<usize, Box<dyn AnalysisModule>>, name_to_id: &HashMap<&'static str, usize>) -> bool {
+    fn are_dependencies_valid(&self, id_to_module: &HashMap<usize, Box<dyn AnalysisModule>>, name_to_id: &HashMap<RString, usize>) -> bool {
         for module in id_to_module {
             let currently_verifying_module = module.1.get_info();
             for dependency in  currently_verifying_module.dependencies {
                 //Verify that the required module even exists
-                let required_analyzer_id = name_to_id.get_key_value(dependency.name);
+                let required_analyzer_id = name_to_id.get_key_value(&dependency.name);
                 if required_analyzer_id.is_none() {
                     println!("{} is missing a required module: {}", currently_verifying_module.name, dependency.name);
                     return false;
@@ -131,7 +135,7 @@ impl AnalyzeCommand {
                 //Verify that the version is correct for the dependency
                 let required_module = id_to_module.get_key_value(required_analyzer_id.unwrap().1);
                 let found_version = required_module.unwrap().1.get_info().version;
-                if !dependency.version_requirement.matches(&found_version) {
+                if !dependency.version_requirement.compatible_with(&found_version) {
                     println!("{} is missing the required version of module {}", currently_verifying_module.name, dependency.name);
                     println!("The version that was found is {}, but the required version is {}", found_version, dependency.version_requirement);
                     return false;
@@ -142,8 +146,8 @@ impl AnalyzeCommand {
     }
 
     ///Executes all modules in a ~~multi-threaded~~ single threaded manner.
-    fn run_all_modules(&self, module_execution_order: Vec<Box<dyn AnalysisModule>>, pcap_input_directory: &String) {
-        let mut table_names = Vec::new();
+    fn run_all_modules(&self, module_execution_order: RVec<Box<dyn AnalysisModule>>, pcap_input_directory: &RString) {
+        let mut table_names = RVec::new();
         for module in module_execution_order {
             let new_tables = module.analyze(&table_names, pcap_input_directory);
             table_names.extend(new_tables);
@@ -163,7 +167,7 @@ impl Command for AnalyzeCommand {
         let discovered_modules = self.parse_analyzer_plugins(module_directory.to_string());
         let execution_order = self.construct_execution_list(discovered_modules);
         if execution_order.is_some() {
-            self.run_all_modules(execution_order.unwrap(), flags.get_key_value("p").unwrap().1);
+            self.run_all_modules(execution_order.unwrap(), &RString::from(flags.get_key_value("p").unwrap().1.to_string()));
         }
         else {
             println!("Can't prepare modules for execution.");

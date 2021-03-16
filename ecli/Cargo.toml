@@ -19,3 +19,8 @@ sled = "0.34.6"
 log_t = "0.1.0"
 #My crates and in this workspace
 eframework = { path = "../eframework" }
+
+[dependencies.abi_stable]
+version = "0.9.3"
+default-features = false
+features = [ ]

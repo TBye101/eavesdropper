@@ -12,3 +12,8 @@ semver = "0.11.0"
 
 #My crates and in this workspace
 eframework = { path = "../eframework" }
+
+[dependencies.abi_stable]
+version = "0.9.3"
+default-features = false
+features = [ ]

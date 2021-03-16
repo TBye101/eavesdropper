@@ -30,6 +30,7 @@ Why? Because the people should have the same digital capabilities as their gover
   - [ ] Able to send captured packets to another machine running an instance of this tool
   - [ ] Ignores or filters this traffic out in order to not capture and analyze them
   - [ ] Communication between machines is encrypted
+  - [ ] Document how to setup remote listeners and receivers
 - [ ] Listener configuration
   - [ ] Can configure what listeners are being utilized
 
@@ -39,29 +40,34 @@ Why? Because the people should have the same digital capabilities as their gover
   - [ ] Supports concept of database machines that only exist to store the data from the analysis
   - [ ] Worker machines process jobs and send data to either the manager machine, or designated database machines
   - [ ] Communication between machines is encrypted
+  - [ ] Document how to setup and use centralized distributed analysis
 
 ### Version 0.5.0
-- [ ] Distributed Analysis (Decentralized model)
+- [ ] Distributed Analysis (Decentralized public model)
   - [ ] Can handle machines joining mid analysis
   - [ ] Can handle machines leaving mid analysis
   - [ ] Communication is encrypted between machines
   - [ ] If controller leaves, new controller is elected
   - [ ] Supports each machine having their own database or using another machine loyal to them as their database
   - [ ] Any machine can join the analysis network
+  - [ ] Document how to setup and use decentralized public model
+  - [ ] Optional authorization required to join the network
 
 - [ ] Distributed Analysis (Fault tolerance model)
   - [ ] Distributed Analysis model but with a few differences:
     - [ ] Supports any number of database redundancies
-    - [ ] Machines must be authorized to join the analysis network
+    - [ ] Optional authorization required to join the network
 
 ### Version 0.6.0
 - [ ] Realtime analysis
   - [ ] Analysis machine or analysis network can analyze packets as they are received
+  - [ ] Document how to setup realtime analysis
 
 ### Version 0.7.0
 - [ ] Partial re-analysis
   - [ ] Allow for partial re-analysis as data is decrypted in plugins
   - [ ] Allow manual input of encryption credentials
+  - [ ] Document how to write plugins that support re-analysis
 
 ### Version 0.8.0
 - [ ] Allow user to specify what plugins run
