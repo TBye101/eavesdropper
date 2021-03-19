@@ -1,3 +1,5 @@
+use std::path::Path;
+
 /// # Design
 /// * For each module create a new table
 ///     * moduleName_Guid
@@ -8,7 +10,7 @@
  
 use semver::VersionReq;
 use static_assertions::*;
-use abi_stable::{DynTrait, StableAbi, library::RootModule, package_version_strings, sabi_trait, sabi_types::VersionStrings, std_types::{RBox, RStr, RString, RVec}};
+use abi_stable::{DynTrait, StableAbi, library::{LibraryError, RootModule}, package_version_strings, sabi_trait, sabi_types::VersionStrings, std_types::{RBox, RStr, RString, RVec}};
 
 use crate::{RVersion::RVersion, RVersionReq::RVersionReq};
 
@@ -57,7 +59,11 @@ assert_obj_safe!(AnalysisModule);
 #[sabi(kind(Prefix(prefix_ref="Plugin_Ref")))]
 #[sabi(missing_field(panic))]
 pub struct Plugin {
+    #[sabi(last_prefix_field)]//Stays here until we bump the major version number. Then it moves to the last field of the struct.
+    pub get_analyzer: extern "C" fn() -> AnalysisModuleBox,
 
+    // #[sabi(last_prefix_field)] //Stays here until we bump the major version number. Then it moves to the last field of the struct.
+    // pub new_boxed_plugin: extern "C" fn() -> BoxedPluginInterface<'static>
 }
 
 ///Some versioning information for determining which version of a plugin will compile with which version of the plugin system.
@@ -75,3 +81,15 @@ impl RootModule for Plugin_Ref {
 #[sabi(impl_InterfaceType(Sync, Send, Debug, Display))]
 pub struct PluginInterface;
 pub type BoxedPluginInterface<'borr> = DynTrait<'borr, RBox<()>, PluginInterface>;
+
+/// This loads the root from the library in the `directory` folder.
+pub fn load_plugin_from_directory(directory: &Path) -> Result<Box<dyn AnalysisModule>, String> {
+    let test: Result<Plugin_Ref, LibraryError> = Plugin_Ref::load_from_file(directory);
+    match test {
+        Err(e) => Err(format!("Failed to load plugin: {} | Error: {}", directory.to_str().unwrap(), e)),
+        Ok(plugin) => {
+            let analysis_module_boxed = plugin.get_analyzer()();//Mysteriously turns into AnalysisModuleBox, which can be boxed up and magically treated like an instance of the AnalysisModule trait? Some Stable_Abi crate magic happening here...
+            return Ok(Box::new(analysis_module_boxed));
+        }
+    }
+}

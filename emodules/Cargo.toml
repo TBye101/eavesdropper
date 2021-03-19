@@ -5,7 +5,7 @@ authors = ["Thomas Bye <ThomasBye1@gmail.com>"]
 edition = "2018"
 
 [lib]
-crate-type = ["cdylib", "rlib"]
+crate-type = ["cdylib"]
 
 [dependencies]
 semver = "0.11.0"

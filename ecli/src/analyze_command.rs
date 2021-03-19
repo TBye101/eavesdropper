@@ -1,10 +1,10 @@
 extern crate libloading;
 
-use std::{collections::HashMap, ops::Deref};
+use std::{collections::HashMap, ops::Deref, path::Path};
 
-use abi_stable::std_types::{RString, RVec};
+use abi_stable::{library::LibraryError, std_types::{RString, RVec}};
 use cliargs_t::{Command, Flag};
-use eframework::analysis_framework::AnalysisModule;
+use eframework::analysis_framework::{AnalysisModule, load_plugin_from_directory};
 use libloading::Error;
 use petgraph::{Directed, graphmap::{GraphMap}};
 
@@ -26,39 +26,26 @@ impl AnalyzeCommand {
     fn parse_plugin(&self, plugin_path: &String, loaded_modules: &mut Vec<Box<dyn AnalysisModule>>) {
         let module_load_attempt = self.load_module(plugin_path.to_string());
 
-        if module_load_attempt.is_ok() {
-            let modules = module_load_attempt.ok().unwrap();
-            for analyzer in modules {
-                loaded_modules.push(analyzer);
-            }
+        match module_load_attempt {
+            Ok(modules) => {
+                for analyzer in modules {
+                    loaded_modules.push(analyzer);
+                }
+            },
+            Err(e) => println!("{}", e)
         }
     }
 
     ///Loads a plugin library and returns the analyzers from it.
     fn load_module(&self, module_path: String) -> Result<Vec<Box<dyn AnalysisModule>>, String> {
-        
+        let module_load_attempt = load_plugin_from_directory(Path::new(&module_path));
 
-        todo!()
-        // let lib_load = libloading::Library::new(&module_path);
-        // if lib_load.is_err() {
-        //     return Err(lib_load.err().unwrap().to_string());
-        // }
-
-        // let lib = lib_load.unwrap();
-        // let module_load: Result<libloading::Symbol<extern "Rust" fn() -> Box<Vec<Box<dyn AnalysisModule>>>>, Error>;
-        // unsafe {
-        //     module_load = lib.get(b"get_modules");
-        // }
-
-        // if module_load.is_ok() {
-        //     let fetch_function = module_load.ok().unwrap();
-        //     let loaded_analyzers = *fetch_function();
-        //     return Ok(loaded_analyzers);
-        // }
-        // else {
-        //     println!("Error loading module: {}", module_path);
-        //     return Err(module_load.err().unwrap().to_string());
-        // }
+        match module_load_attempt {
+            Err(e) => Err(e),
+            Ok(loaded_module) => {
+                return Ok(vec!(loaded_module));
+            }
+        }
     }
 
     ///Returns a vec with an order to execute modules in, or None should there be a dependency issue or cycle.
