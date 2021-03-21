@@ -43,7 +43,7 @@ impl RVersion {
     }
 
     ///Returns true if the two versions are compatible in a semantic versioning sense, AKA their major versions are the same.
-    pub fn is_compatible(&self, otherVersion: &RVersion) -> bool {
-        return self.major == otherVersion.major;
+    pub fn is_compatible(&self, other_version: &RVersion) -> bool {
+        return self.major == other_version.major;
     }
 }

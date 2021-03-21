@@ -61,6 +61,9 @@ Program analyzer
 
 */
 
+#[macro_use]
+extern crate dotenv;
+
 extern crate etherparse;
 
 mod listen_command;

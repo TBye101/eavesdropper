@@ -1,0 +1,1 @@
+DROP TABLE packets_pcap_parser

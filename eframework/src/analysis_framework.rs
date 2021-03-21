@@ -8,9 +8,8 @@ use std::path::Path;
 /// * Conditional re-running of modules with new information somehow?
 /// https://michael-f-bryan.github.io/rust-ffi-guide/dynamic_loading.html
  
-use semver::VersionReq;
 use static_assertions::*;
-use abi_stable::{DynTrait, StableAbi, library::{LibraryError, RootModule}, package_version_strings, sabi_trait, sabi_types::VersionStrings, std_types::{RBox, RStr, RString, RVec}};
+use abi_stable::{DynTrait, StableAbi, library::{LibraryError, RootModule}, package_version_strings, sabi_trait, sabi_types::VersionStrings, std_types::{RBox, RString, RVec}};
 
 use crate::{RVersion::RVersion, RVersionReq::RVersionReq};
 
@@ -44,10 +43,8 @@ pub trait AnalysisModule {
     fn get_info(&self) -> ModuleInfo;
 
     ///Called when the framework is ready for the module to perform its analysis.
-    ///table_names: The names of the tables that have already been created.
-    ///Should return the names of the tables that have been created by this module. 
     #[sabi(last_prefix_field)]//This attribute will stay here until we bump the "major" version of the library, in which case we will then move it to the last method at the time of bumping.
-    fn analyze(&self, table_names: &RVec<RString>, pcap_input_directory: &RString) -> RVec<RString>; 
+    fn analyze(&self, pcap_input_directory: &RString, connection_string: &RString);
 }
 //Create an type alias for the automatically generated trait object for the AnalysisModule trait. https://docs.rs/abi_stable/0.9.3/abi_stable/docs/sabi_trait_attribute/index.html#trait_trait
 pub type AnalysisModuleBox = AnalysisModule_TO<'static, RBox<()>>;
@@ -61,9 +58,6 @@ assert_obj_safe!(AnalysisModule);
 pub struct Plugin {
     #[sabi(last_prefix_field)]//Stays here until we bump the major version number. Then it moves to the last field of the struct.
     pub get_analyzer: extern "C" fn() -> AnalysisModuleBox,
-
-    // #[sabi(last_prefix_field)] //Stays here until we bump the major version number. Then it moves to the last field of the struct.
-    // pub new_boxed_plugin: extern "C" fn() -> BoxedPluginInterface<'static>
 }
 
 ///Some versioning information for determining which version of a plugin will compile with which version of the plugin system.
@@ -74,13 +68,6 @@ impl RootModule for Plugin_Ref {
     const NAME: &'static str = "Plugin";
     const VERSION_STRINGS: VersionStrings = package_version_strings!();
 }
-
-///This is needed because it somehow describes our ffi traits...?
-#[repr(C)]
-#[derive(StableAbi)]
-#[sabi(impl_InterfaceType(Sync, Send, Debug, Display))]
-pub struct PluginInterface;
-pub type BoxedPluginInterface<'borr> = DynTrait<'borr, RBox<()>, PluginInterface>;
 
 /// This loads the root from the library in the `directory` folder.
 pub fn load_plugin_from_directory(directory: &Path) -> Result<Box<dyn AnalysisModule>, String> {

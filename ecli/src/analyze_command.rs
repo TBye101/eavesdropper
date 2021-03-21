@@ -1,11 +1,8 @@
-extern crate libloading;
-
-use std::{collections::HashMap, ops::Deref, path::Path};
-
-use abi_stable::{library::LibraryError, std_types::{RString, RVec}};
+use std::{collections::HashMap, path::Path};
+use std::env;
+use abi_stable::{std_types::{RString, RVec}};
 use cliargs_t::{Command, Flag};
 use eframework::analysis_framework::{AnalysisModule, load_plugin_from_directory};
-use libloading::Error;
 use petgraph::{Directed, graphmap::{GraphMap}};
 
 pub struct AnalyzeCommand {}
@@ -132,12 +129,13 @@ impl AnalyzeCommand {
         return true;
     }
 
-    ///Executes all modules in a ~~multi-threaded~~ single threaded manner.
+    ///Executes all modules in a ~~multi~~ single threaded manner.
     fn run_all_modules(&self, module_execution_order: RVec<Box<dyn AnalysisModule>>, pcap_input_directory: &RString) {
-        let mut table_names = RVec::new();
+        dotenv::dotenv().ok();
+        let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+
         for module in module_execution_order {
-            let new_tables = module.analyze(&table_names, pcap_input_directory);
-            table_names.extend(new_tables);
+            module.analyze(pcap_input_directory, &RString::from(database_url.clone()));
         }
     }
 }

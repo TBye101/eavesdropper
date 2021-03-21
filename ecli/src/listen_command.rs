@@ -9,7 +9,7 @@ pub struct ListenCommand {}
 impl cliargs_t::Command for ListenCommand {
     
     fn execute_command(&self, _: std::collections::HashMap<std::string::String, std::string::String>) {
-        let capture_manager_thread = std::thread::spawn(move || {
+        let _capture_manager_thread = std::thread::spawn(move || {
             let log = FileLogger::new_from_static_string("eavesdropping_log.txt").ok().unwrap();
             let shared_log = Arc::new(log);
         

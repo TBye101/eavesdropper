@@ -1,14 +1,18 @@
 [package]
-name = "emodules"
+name = "pcap_parser"
 version = "0.1.0"
 authors = ["Thomas Bye <ThomasBye1@gmail.com>"]
 edition = "2018"
 
 [lib]
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 semver = "0.11.0"
+libc = "0.2.90"
+
+diesel = { version = "1.4.6", features = ["postgres"] }
+diesel_migrations = "1.4.0"
 
 #My crates and in this workspace
 eframework = { path = "../eframework" }

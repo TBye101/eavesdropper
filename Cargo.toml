@@ -3,5 +3,5 @@
 members = [
     "ecli",
     "eframework",
-    "emodules"
+    "pcap_parser"
 ]
