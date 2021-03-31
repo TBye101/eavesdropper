@@ -69,9 +69,14 @@ jobs:
       - uses: actions/checkout@v2
       - uses: hecrj/setup-rust-action@v1
       - run: sudo apt-get install libssl-dev
+      - run: echo workingdir $(pwd)
       - run: cargo install cargo-geiger --git https://github.com/rust-secure-code/cargo-geiger.git --features vendored-openssl
       - run: cargo install rustig --git https://github.com/Technolution/rustig.git
-      - run: cargo geiger
-      - run: echo workingdir $(pwd)
       - run: rustig -f -v
+      - run: cd ecli
+      - run: cargo geiger
+      - run: cd ../eframework
+      - run: cargo geiger
+      - run: cd ../pcap_parser
+      - run: cargo geiger
     
