@@ -74,7 +74,7 @@ jobs:
       - run: echo workingdir $(pwd)
       - run: cargo install cargo-geiger --git https://github.com/rust-secure-code/cargo-geiger.git --features vendored-openssl
       - run: cargo install rustig --git https://github.com/Technolution/rustig.git
-      - run: rustig -f -v
+      - run: rustig --binary target/debug/ecli --full-crate-analysis --verbose
       - run: cd ecli
       - run: cargo geiger
       - run: cd ../eframework
