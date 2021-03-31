@@ -46,7 +46,7 @@ jobs:
       - run: cargo clippy --workspace --all-targets --verbose --all-features
       - run: cargo fmt --all -- --check
 
-  # cargo-audit
+  # cargo-audit (looks for CVEs in dependencies), cargo-crev (Security reports and trust circles for crates)
   security:
     name: Verify Crate and Dependency Security
     runs-on: ubuntu-latest
@@ -58,4 +58,15 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - run: cargo install cargo-crev
       - run: cargo crev crate verify --show-all
+      
+  # cargo-geiger (Checks for unsafe), rustig (Checks for panic! paths)
+  reliability: 
+    name: Check Crate and Dependency Reliability
+    runs-on: ubuntu-latest
+    steps:
+      - run: cargo install cargo-geiger --features vendored-openssl
+      - run: cargo install --git https://github.com/Technolution/rustig rustig
+      - run: cargo geiger
+      - run: echo workingdir $(pwd)
+      - run: rustig -f -v
     
