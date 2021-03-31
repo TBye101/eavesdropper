@@ -78,10 +78,11 @@ jobs:
       - run: cargo install cargo-geiger --git https://github.com/rust-secure-code/cargo-geiger.git --features vendored-openssl
       - run: cargo install rustig --git https://github.com/Technolution/rustig.git
       - run: cargo build
-      - run: rustig --binary target/debug/ecli --full-crate-analysis --verbose
       - run: cd ecli
       - run: cargo geiger
       - run: cd ../eframework
       - run: cargo geiger
       - run: cd ../pcap_parser
       - run: cargo geiger
+      - run: cd ..
+      - run: rustig --binary target/debug/ecli --full-crate-analysis --verbose
