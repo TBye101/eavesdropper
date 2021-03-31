@@ -58,7 +58,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - run: cargo install cargo-crev
       - run: cargo install cargo-outdated
-      - run: cargo cargo outdated
+      - run: cargo outdated
       - run: cargo crev crate verify --show-all
       
   # cargo-geiger (Checks for unsafe), rustig (Checks for panic! paths)
@@ -69,8 +69,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: hecrj/setup-rust-action@v1
       - run: sudo apt-get install libssl-dev
-      - run: cargo install --git https://github.com/rust-secure-code/cargo-geiger.git --features vendored-openssl
-      - run: cargo install --git https://github.com/Technolution/rustig rustig
+      - run: cargo install cargo-geiger --git https://github.com/rust-secure-code/cargo-geiger.git --features vendored-openssl
+      - run: cargo install rustig --git https://github.com/Technolution/rustig.git
       - run: cargo geiger
       - run: echo workingdir $(pwd)
       - run: rustig -f -v
