@@ -434,6 +434,7 @@ dependencies = [
  "abi_stable",
  "diesel",
  "diesel_migrations",
+ "dotenv",
  "eframework",
  "libc",
  "semver 0.11.0",

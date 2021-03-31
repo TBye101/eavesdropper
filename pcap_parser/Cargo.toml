@@ -13,6 +13,7 @@ libc = "0.2.90"
 
 diesel = { version = "1.4.6", features = ["postgres"] }
 diesel_migrations = "1.4.0"
+dotenv = "0.15.0"
 
 #My crates and in this workspace
 eframework = { path = "../eframework" }

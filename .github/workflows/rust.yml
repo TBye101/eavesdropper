@@ -41,6 +41,7 @@ jobs:
       - uses: hecrj/setup-rust-action@v1
         with:
           components: clippy, rustfmt
+      - run: sudo apt-get install libpcap-dev
       - run: cargo install cargo-spellcheck
       - run: cargo clippy --workspace --all-targets --verbose
       - run: cargo clippy --workspace --all-targets --verbose --no-default-features
@@ -58,6 +59,7 @@ jobs:
       - uses: actions-rs/audit-check@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+      - run: sudo apt-get install libpcap-dev
       - run: cargo install cargo-crev
       - run: cargo install cargo-outdated
       - run: cargo outdated
@@ -70,6 +72,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: hecrj/setup-rust-action@v1
+      - run: sudo apt-get install libpcap-dev
       - run: sudo apt-get install libssl-dev
       - run: echo workingdir $(pwd)
       - run: cargo install cargo-geiger --git https://github.com/rust-secure-code/cargo-geiger.git --features vendored-openssl
