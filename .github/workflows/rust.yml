@@ -64,6 +64,8 @@ jobs:
     name: Check Crate and Dependency Reliability
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+      - uses: hecrj/setup-rust-action@v1
       - run: cargo install cargo-geiger --features vendored-openssl
       - run: cargo install --git https://github.com/Technolution/rustig rustig
       - run: cargo geiger
