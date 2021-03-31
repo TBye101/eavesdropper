@@ -36,6 +36,15 @@ impl AnalysisModule for PCapParserModule {
         let connection: PgConnection = PgConnection::establish(&connection_string)
         .expect(&format!("Error connecting to {}", database_url));
 
-        diesel_migrations::run_pending_migrations(&connection);
+        let migration_result = diesel_migrations::run_pending_migrations(&connection);
+
+        if migration_result.is_err() {
+            println!("An error occurred while running migrations: {}", migration_result.err().unwrap());
+            return;
+        }
     }
+}
+
+impl PCapParserModule {
+    
 }
