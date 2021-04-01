@@ -2,7 +2,7 @@ use std::{collections::HashMap, path::Path};
 use std::env;
 use abi_stable::{std_types::{RString, RVec}};
 use cliargs_t::{Command, Flag};
-use eframework::analysis_framework::{AnalysisModule, load_plugin_from_directory};
+use eframework::analysis_framework::{AnalysisModule, load_plugin_from_file};
 use petgraph::{Directed, graphmap::{GraphMap}};
 
 pub struct AnalyzeCommand {}
@@ -35,7 +35,7 @@ impl AnalyzeCommand {
 
     ///Loads a plugin library and returns the analyzers from it.
     fn load_module(&self, module_path: String) -> Result<Vec<Box<dyn AnalysisModule>>, String> {
-        let module_load_attempt = load_plugin_from_directory(Path::new(&module_path));
+        let module_load_attempt = load_plugin_from_file(Path::new(&module_path));
 
         match module_load_attempt {
             Err(e) => Err(e),

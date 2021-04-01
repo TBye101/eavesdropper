@@ -79,6 +79,6 @@ jobs:
       - run: cargo install rustig --git https://github.com/Technolution/rustig.git
       - run: cargo build
       - run: cd ecli && cargo geiger
-      - run: cd ../eframework && cargo geiger
-      - run: cd ../pcap_parser && cargo geiger
-      - run: cd .. && rustig --binary target/debug/ecli --full-crate-analysis --verbose
+      - run: cd eframework && cargo geiger
+      - run: cd pcap_parser && cargo geiger
+      - run: rustig --binary target/debug/ecli --full-crate-analysis --verbose

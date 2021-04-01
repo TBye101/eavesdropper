@@ -9,7 +9,7 @@ use std::path::Path;
 /// https://michael-f-bryan.github.io/rust-ffi-guide/dynamic_loading.html
  
 use static_assertions::*;
-use abi_stable::{DynTrait, StableAbi, library::{LibraryError, RootModule}, package_version_strings, sabi_trait, sabi_types::VersionStrings, std_types::{RBox, RString, RVec}};
+use abi_stable::{StableAbi, library::{LibraryError, RootModule}, package_version_strings, sabi_trait, sabi_types::VersionStrings, std_types::{RBox, RString, RVec}};
 
 use crate::{RVersion::RVersion, RVersionReq::RVersionReq};
 
@@ -69,11 +69,11 @@ impl RootModule for Plugin_Ref {
     const VERSION_STRINGS: VersionStrings = package_version_strings!();
 }
 
-/// This loads the root from the library in the `directory` folder.
-pub fn load_plugin_from_directory(directory: &Path) -> Result<Box<dyn AnalysisModule>, String> {
-    let test: Result<Plugin_Ref, LibraryError> = Plugin_Ref::load_from_file(directory);
+/// This loads the root from the library in the file.
+pub fn load_plugin_from_file(file: &Path) -> Result<Box<dyn AnalysisModule>, String> {
+    let test: Result<Plugin_Ref, LibraryError> = Plugin_Ref::load_from_file(file);
     match test {
-        Err(e) => Err(format!("Failed to load plugin: {} | Error: {}", directory.to_str().unwrap(), e)),
+        Err(e) => Err(format!("Failed to load plugin: {} | Error: {}", file.to_str().unwrap(), e)),
         Ok(plugin) => {
             let analysis_module_boxed = plugin.get_analyzer()();//Mysteriously turns into AnalysisModuleBox, which can be boxed up and magically treated like an instance of the AnalysisModule trait? Some Stable_Abi crate magic happening here...
             return Ok(Box::new(analysis_module_boxed));

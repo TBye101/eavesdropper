@@ -3,6 +3,9 @@ use dotenv::dotenv;
 use abi_stable::{export_root_module, prefix_type::PrefixTypeTrait, rvec, sabi_extern_fn, sabi_trait::prelude::TU_Opaque, std_types::{RString, RVec}};
 use eframework::{RVersion::RVersion, analysis_framework::{AnalysisModule, AnalysisModuleBox, ModuleInfo, Plugin, Plugin_Ref, AnalysisModule_TO}};
 use diesel::{Connection, pg::PgConnection};
+use pcap::{Capture, Offline};
+
+use crate::schema;
 
 #[export_root_module]
 pub fn get_library() -> Plugin_Ref {
@@ -42,9 +45,39 @@ impl AnalysisModule for PCapParserModule {
             println!("An error occurred while running migrations: {}", migration_result.err().unwrap());
             return;
         }
+
+        self.parse_captures(pcap_input_directory, &connection);
     }
 }
 
 impl PCapParserModule {
-    
+    fn parse_captures(&self, pcap_input_directory: &RString, connection: &PgConnection) {
+        let captures_result = std::fs::read_dir(pcap_input_directory.to_string());
+        if captures_result.is_err() {
+            println!("An error occurred while running migrations: {}", captures_result.err().unwrap());
+            return;
+        }
+
+        let captures = captures_result.unwrap();
+        for capture_file in captures {
+            let stored_capture = Capture::from_file(capture_file.unwrap().path().into_os_string().into_string().unwrap());
+            match stored_capture {
+                Err(e) => {
+                    println!("An error occured while parsing capture: {}", e.to_string());
+                },
+                Ok(capture) => {
+                    self.parse_capture(connection, capture);
+                }
+            }
+        }
+    }
+
+    fn parse_capture(&self, connection: &PgConnection, mut capture: Capture<Offline>) {
+        use crate::schema::packets_pcap_parser::dsl::*;
+        while let Ok(packet) = capture.next() {
+            let header = packet.header;
+            let data = packet.data;
+            //packets_pcap_parser.
+        }
+    }
 }
