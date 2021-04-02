@@ -8,5 +8,3 @@ pub mod schema;//Needed by diesel in order to generate a bunch of code to repres
 pub mod models;//Where our table definitions are held
 
 pub mod pcap_parser_module;
-
-embed_migrations!();//Embed our Diesel migrations into this crate so we can run them upon beginning analysis later.
