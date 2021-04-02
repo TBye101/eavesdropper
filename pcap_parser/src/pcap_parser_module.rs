@@ -1,10 +1,10 @@
-use std::env;
+use std::{env, time::SystemTime};
 use dotenv::dotenv;
 use abi_stable::{export_root_module, prefix_type::PrefixTypeTrait, rvec, sabi_extern_fn, sabi_trait::prelude::TU_Opaque, std_types::{RString, RVec}};
 use eframework::{RVersion::RVersion, analysis_framework::{AnalysisModule, AnalysisModuleBox, ModuleInfo, Plugin, Plugin_Ref, AnalysisModule_TO}};
-use diesel::{Connection, pg::PgConnection};
+use diesel::{Connection, RunQueryDsl, pg::PgConnection};
 use pcap::{Capture, Offline};
-
+use crate::models::NewPacket;
 use crate::schema;
 
 #[export_root_module]
@@ -73,11 +73,23 @@ impl PCapParserModule {
     }
 
     fn parse_capture(&self, connection: &PgConnection, mut capture: Capture<Offline>) {
-        use crate::schema::packets_pcap_parser::dsl::*;
         while let Ok(packet) = capture.next() {
             let header = packet.header;
             let data = packet.data;
-            //packets_pcap_parser.
+            let parsed_packet = NewPacket {
+                payload: data.to_vec(),
+                captured_timestamp: chrono::NaiveDateTime::from_timestamp(header.ts.tv_sec, 0),
+                capture_length: header.caplen as i32,
+                packet_length: header.len as i32,
+            };
+
+            let insert = diesel::insert_into(crate::schema::packets_pcap_parser::table)
+                .values(&parsed_packet)
+                .get_result::<crate::models::Packet>(connection);
+            
+            if insert.is_err() {
+                println!("Error inserting packet into database");
+            }
         }
     }
 }

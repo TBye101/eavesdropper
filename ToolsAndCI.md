@@ -26,3 +26,6 @@ https://github.com/rust-lang/rustfix
 Dependencies:
 https://lib.rs/crates/cargo-outdated Done
 https://lib.rs/crates/cargo-deny
+
+Diesel:
+https://github.com/abbychau/diesel_cli_ext/blob/master/README.md
