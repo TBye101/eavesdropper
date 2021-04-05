@@ -1,6 +1,6 @@
 use abi_stable::{StableAbi};
 
-use crate::RVersion::RVersion;
+use crate::rversion::RVersion;
 
 //, Eq, Ord
 #[repr(C)]
@@ -8,10 +8,10 @@ use crate::RVersion::RVersion;
 pub struct RVersionReq {
 
     ///The minimum version that is required (inclusive).
-    minimum_version: RVersion,
+    pub minimum_version: RVersion,
 
     ///The maximum version that is allowed (inclusive)
-    maximum_version: RVersion
+    pub maximum_version: RVersion
 }
 
 impl RVersionReq {
@@ -21,7 +21,7 @@ impl RVersionReq {
             return true;
         }
 
-        return version.cmp(&self.minimum_version) == std::cmp::Ordering::Greater && version.cmp(&self.maximum_version) == std::cmp::Ordering::Less;
+        version.cmp(&self.minimum_version) == std::cmp::Ordering::Greater && version.cmp(&self.maximum_version) == std::cmp::Ordering::Less
     }
 }
 

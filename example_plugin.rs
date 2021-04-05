@@ -1,40 +1,10 @@
-# Eavesdropper
-A packet sniffing and analyzing tool with a plugin system for analyzers.
-
-## Roadmap
-You can find the official plugin roadmap [here](OfficialPluginRoadmap.md)
-
-The framework roadmap can be found [here](FrameworkRoadmap.md)
-
-## Plugins
-Eavesdropper performs packet analysis via plugins.
-
-### Creating a Plugin
-Required crates:
-* eframework
-* [abi_stable](https://crates.io/crates/abi_stable)
-
-### Example Plugin Using [Diesel](https://diesel.rs/)
-Example code without comments can be found [here](example_plugin.rs)
-
-These use statements are required to be a plugin as well as to use the basics of Diesel.
-``` Rust
-
 use dotenv::dotenv;
 use abi_stable::{export_root_module, prefix_type::PrefixTypeTrait, rvec, sabi_extern_fn, sabi_trait::prelude::TU_Opaque, std_types::{RString, RVec}};
 use eframework::{analysis_framework::{AnalysisModule, AnalysisModuleBox, AnalysisModule_TO, Dependency, ModuleInfo, Plugin, Plugin_Ref}, rversion::RVersion, rversion_req::RVersionReq};
 use diesel::{Connection, RunQueryDsl, pg::PgConnection};
 
-```
-This statement here has Diesel embed its ```/migrations``` directory directly into your plugin. Necessary to keep plugins portable and downloadable via binaries or from crates.io
-``` Rust
 embed_migrations!();//Embed our Diesel migrations into this crate so we can run them upon beginning analysis later.
-```
 
-This little snippet is what allows the Eavesdropper cli to load the plugin out of a compiled library.
-The only thing that should be customized here would be changing the name of the struct to something that suits your plugin better.
-Do remember to change the name in the rest of the example plugin.
-``` Rust
 #[export_root_module]
 pub fn get_library() -> Plugin_Ref {
     Plugin {
@@ -48,12 +18,7 @@ pub fn get_analyzer() -> AnalysisModuleBox {
 }
 
 pub struct ExampleModule { }
-```
 
-Here we implement the AnalysisModule trait, which enables our plugin to be called in the analysis process.
-The first function, ```get_info``` is what enables Eavesdropper to gather the name, version and dependency information about your plugin.
-The second function, ```analyze``` is what is called when it is your plugins turn to perform its analysis.
-``` Rust
 impl AnalysisModule for ExampleModule {
     fn get_info(&self) -> eframework::analysis_framework::ModuleInfo {
         return ModuleInfo {
@@ -91,11 +56,3 @@ impl AnalysisModule for ExampleModule {
         //Do some packet analysis... 
     }
 }
-
-```
-
-### List of Official Plugins
-[PCAP Parser](pcap_parser/README.md)
-
-### Curated List of Community Plugins
-This is sad

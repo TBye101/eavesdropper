@@ -1,3 +1,6 @@
+//! A plugin for eavesdropper that parser pcap files and stores their information in a postgresql database.
+//! Generally, this plugin will be a dependency for all other plugins in order to avoid reparsing the pcap files.
+
 #[macro_use]
 extern crate diesel_migrations;
 

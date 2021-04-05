@@ -11,7 +11,7 @@ use std::path::Path;
 use static_assertions::*;
 use abi_stable::{StableAbi, library::{LibraryError, RootModule}, package_version_strings, sabi_trait, sabi_types::VersionStrings, std_types::{RBox, RString, RVec}};
 
-use crate::{RVersion::RVersion, RVersionReq::RVersionReq};
+use crate::{rversion::RVersion, rversion_req::RVersionReq};
 
 ///Used to specify that a module requires another module to be run before it can be run.
 #[repr(C)]
@@ -76,7 +76,7 @@ pub fn load_plugin_from_file(file: &Path) -> Result<Box<dyn AnalysisModule>, Str
         Err(e) => Err(format!("Failed to load plugin: {} | Error: {}", file.to_str().unwrap(), e)),
         Ok(plugin) => {
             let analysis_module_boxed = plugin.get_analyzer()();//Mysteriously turns into AnalysisModuleBox, which can be boxed up and magically treated like an instance of the AnalysisModule trait? Some Stable_Abi crate magic happening here...
-            return Ok(Box::new(analysis_module_boxed));
+            Ok(Box::new(analysis_module_boxed))
         }
     }
 }

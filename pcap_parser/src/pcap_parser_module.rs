@@ -1,11 +1,10 @@
-use std::{env, time::{Instant, SystemTime}};
+use std::{env, time::{Instant}};
 use dotenv::dotenv;
-use abi_stable::{export_root_module, prefix_type::PrefixTypeTrait, rvec, sabi_extern_fn, sabi_trait::prelude::TU_Opaque, std_types::{RString, RVec}};
-use eframework::{RVersion::RVersion, analysis_framework::{AnalysisModule, AnalysisModuleBox, ModuleInfo, Plugin, Plugin_Ref, AnalysisModule_TO}};
+use abi_stable::{export_root_module, prefix_type::PrefixTypeTrait, rvec, sabi_extern_fn, sabi_trait::prelude::TU_Opaque, std_types::{RString}};
+use eframework::{analysis_framework::{AnalysisModule, AnalysisModuleBox, AnalysisModule_TO, ModuleInfo, Plugin, Plugin_Ref}, rversion::RVersion};
 use diesel::{Connection, RunQueryDsl, pg::PgConnection};
 use pcap::{Capture, Offline};
 use crate::models::NewPacket;
-use crate::schema;
 
 embed_migrations!();//Embed our Diesel migrations into this crate so we can run them upon beginning analysis later.
 
@@ -28,7 +27,7 @@ impl AnalysisModule for PCapParserModule {
         return ModuleInfo {
             name: RString::from("PCapParser"),
             version: RVersion::new(0, 1, 0),
-            dependencies: rvec![],
+            dependencies: rvec![]
         }
     }
 
@@ -52,6 +51,7 @@ impl AnalysisModule for PCapParserModule {
 }
 
 impl PCapParserModule {
+    ///Parses all files in the directory and pushes the packet captures into the database
     fn parse_captures(&self, pcap_input_directory: &RString, connection: &PgConnection) {
         let captures_result = std::fs::read_dir(pcap_input_directory.to_string());
         if captures_result.is_err() {
@@ -74,9 +74,10 @@ impl PCapParserModule {
         }
     }
 
+    ///Takes a offline capture context (from file) and extracts the pcap data from it.
     fn parse_capture(&self, connection: &PgConnection, mut capture: Capture<Offline>, file_name: &String) {
-        let mut packet_count: u64 = 0;
         let start_time = Instant::now();
+        let mut packet_count: u64 = 0;
         let batch_size_string = env::var("PCAP_PARSER_BATCH_SIZE").expect("Failed to get batch size for pcap_parser module");
         let batch_size = batch_size_string.parse::<usize>().unwrap();
         let mut batch: Vec<NewPacket> = Vec::with_capacity(batch_size);
@@ -106,6 +107,7 @@ impl PCapParserModule {
         println!("Loaded {} captured packets into the database in {} seconds from {}", packet_count, start_time.elapsed().as_secs(), file_name);
     }
 
+    ///Inserts the captured packets batch into the database
     fn insert_packet_batch(&self, connection: &PgConnection, packets: &Vec<NewPacket>) {
         if packets.len() > 0 {
             let insert = diesel::insert_into(crate::schema::packets_pcap_parser::table)
@@ -116,5 +118,13 @@ impl PCapParserModule {
                 println!("Error inserting packets into database");
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() {
+        assert_eq!(2 + 2, 4);
     }
 }
