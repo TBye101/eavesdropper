@@ -21,8 +21,7 @@ impl cliargs_t::Command for ListenCommand {
                 let join_handle = std::thread::spawn(move || {
                     let device_name = device.name.clone();
                     let cap_wrapped = device.open();
-                    if cap_wrapped.is_ok() {
-                        let mut cap = cap_wrapped.unwrap();
+                    if let Ok(mut cap) = cap_wrapped {
                         let mut savefile = cap.savefile(format!("capture_device_{}.pcap", device_name)).unwrap();
                         let mut count = 0;
             
@@ -42,7 +41,7 @@ impl cliargs_t::Command for ListenCommand {
     }
 
     fn get_information(&self) -> cliargs_t::CommandInformation { 
-        return cliargs_t::CommandInformation {
+        cliargs_t::CommandInformation {
             command_name: "listen",
             command_help: "Captures packet traffic",
             flags: vec![

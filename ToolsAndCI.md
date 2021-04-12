@@ -20,10 +20,10 @@ https://crates.io/crates/static_assertions
 https://doc.rust-lang.org/nightly/unstable-book/compiler-flags/sanitizer.html
 
 Testing:
-https://github.com/altsysrq/proptest
-https://docs.rs/mockito/0.30.0/mockito/
-https://github.com/bheisler/criterion.rs
-https://crates.io/crates/cargo-tarpaulin
+https://github.com/altsysrq/proptest //Input / property tester
+https://docs.rs/mockito/0.30.0/mockito/ //HTTP request mocking
+https://github.com/bheisler/criterion.rs //Benchmarking library
+https://crates.io/crates/cargo-tarpaulin //Code coverage tool
 https://doc.rust-lang.org/rust-by-example/testing/unit_testing.html
 https://crates.io/crates/assert_cmd   
 

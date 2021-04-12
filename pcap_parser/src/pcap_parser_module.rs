@@ -24,7 +24,7 @@ pub struct PCapParserModule { }
 
 impl AnalysisModule for PCapParserModule {
     fn get_info(&self) -> eframework::analysis_framework::ModuleInfo {
-        return ModuleInfo {
+        ModuleInfo {
             name: RString::from("PCapParser"),
             version: RVersion::new(0, 1, 0),
             dependencies: rvec![]
@@ -109,7 +109,7 @@ impl PCapParserModule {
 
     ///Inserts the captured packets batch into the database
     fn insert_packet_batch(&self, connection: &PgConnection, packets: &Vec<NewPacket>) {
-        if packets.len() > 0 {
+        if !packets.is_empty() {
             let insert = diesel::insert_into(crate::schema::packets_pcap_parser::table)
             .values(packets)
             .get_result::<crate::models::Packet>(connection);
@@ -118,13 +118,5 @@ impl PCapParserModule {
                 println!("Error inserting packets into database");
             }
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
     }
 }

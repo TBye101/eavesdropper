@@ -3,12 +3,12 @@
 ## Version 0.1.0
 - [x] Basic network sniffing support
   - [x] Listen to all available network interfaces and record to file
-- [ ] Basic plugin system
+- [x] Basic plugin system
   - [x] Load plugins from directory
   - [x] Can determine execution order from dependency and version information
   - [x] Executes plugins against pcap data
-  - [ ] Tests
-- [ ] Complete documentation on everything so far
+  - [x] Tests
+- [x] Complete documentation on everything so far
 - [x] Document how to make a plugin
 
 ## Version 0.2.0

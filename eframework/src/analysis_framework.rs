@@ -1,13 +1,4 @@
-use std::path::Path;
-
-/// # Design
-/// * For each module create a new table
-///     * moduleName_Guid
-/// * Give that table to the module
-/// * Have a module list with module orderings/dependencies
-/// * Conditional re-running of modules with new information somehow?
-/// https://michael-f-bryan.github.io/rust-ffi-guide/dynamic_loading.html
- 
+use std::path::Path; 
 use static_assertions::*;
 use abi_stable::{StableAbi, library::{LibraryError, RootModule}, package_version_strings, sabi_trait, sabi_types::VersionStrings, std_types::{RBox, RString, RVec}};
 

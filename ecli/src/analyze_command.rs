@@ -15,12 +15,12 @@ impl AnalyzeCommand {
         for path in file_names {
             self.parse_plugin(&path.unwrap().path().into_os_string().into_string().unwrap(), &mut modules);
         }
-        return modules;
+        modules
     }
 
     ///Loads a single plugin library and extracts all analyzers from it.
     ///Inserts the analyzers into the specified HashMap.
-    fn parse_plugin(&self, plugin_path: &String, loaded_modules: &mut Vec<Box<dyn AnalysisModule>>) {
+    fn parse_plugin(&self, plugin_path: &str, loaded_modules: &mut Vec<Box<dyn AnalysisModule>>) {
         let module_load_attempt = self.load_module(plugin_path.to_string());
 
         match module_load_attempt {
@@ -40,7 +40,7 @@ impl AnalyzeCommand {
         match module_load_attempt {
             Err(e) => Err(e),
             Ok(loaded_module) => {
-                return Ok(vec!(loaded_module));
+                Ok(vec!(loaded_module))
             }
         }
     }
@@ -75,7 +75,7 @@ impl AnalyzeCommand {
         match execution_order {
             Err(error) => {
                 println!("A cyclic dependency was found for node: {}", error.node_id());
-                return None;
+                None
             },
             Ok(order) => {
                 let mut execution_order: RVec<Box<dyn AnalysisModule>> = RVec::new();
@@ -83,7 +83,7 @@ impl AnalyzeCommand {
                     execution_order.push(id_to_module.remove(&module_id).unwrap());
                 }
 
-                return Some(execution_order);
+                Some(execution_order)
             }
         }
     }
@@ -102,7 +102,7 @@ impl AnalyzeCommand {
             }
         }
 
-        return Some(dependency_graph);
+        Some(dependency_graph)
     }
 
     ///Verifies that all dependencies are found and that their versions satisfy any requirements.
@@ -126,7 +126,7 @@ impl AnalyzeCommand {
                 }
             }
         }
-        return true;
+        true
     }
 
     ///Executes all modules in a ~~multi~~ single threaded manner.
@@ -151,8 +151,8 @@ impl Command for AnalyzeCommand {
         }
         let discovered_modules = self.parse_analyzer_plugins(module_directory.to_string());
         let execution_order = self.construct_execution_list(discovered_modules);
-        if execution_order.is_some() {
-            self.run_all_modules(execution_order.unwrap(), &RString::from(flags.get_key_value("p").unwrap().1.to_string()));
+        if let Some(exec_order) = execution_order {
+            self.run_all_modules(exec_order, &RString::from(flags.get_key_value("p").unwrap().1.to_string()));
         }
         else {
             println!("Can't prepare modules for execution.");
@@ -160,7 +160,7 @@ impl Command for AnalyzeCommand {
     }
 
     fn get_information(&self) -> cliargs_t::CommandInformation { 
-        return cliargs_t::CommandInformation {
+        cliargs_t::CommandInformation {
             command_name: "analyze",
             command_help: "Analyzes pcap files found within a directory using all available modules and gleans as much information as possible from them.",
             flags: vec![
