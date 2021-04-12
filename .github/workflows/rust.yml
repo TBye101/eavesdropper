@@ -30,8 +30,20 @@ jobs:
       - run: cargo test --verbose --workspace --all-features
       - run: cargo test --verbose --workspace --no-default-features
 
-  # Clippy, rustfmt, cargo-spellcheck
-  lints:
+  #Clippy
+  clippy_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: rustup component add clippy
+      - run: sudo apt-get install libpcap-dev
+      - uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features
+
+  # cargo-spellcheck
+  cargo-spellcheck:
     name: Verify Code Formatting and Lint
     runs-on: ubuntu-latest
     env:
@@ -39,17 +51,25 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: hecrj/setup-rust-action@v1
-        with:
-          components: clippy, rustfmt
       - run: sudo apt-get install libpcap-dev
       - run: cargo install cargo-spellcheck
-      - run: cargo clippy --workspace --all-targets --verbose
-      - run: cargo clippy --workspace --all-targets --verbose --no-default-features
-      - run: cargo clippy --workspace --all-targets --verbose --all-features
-      - run: cargo fmt --all -- --check
       - run: cargo spellcheck -m 255 #Fail the CI if there are spelling mistakes
 
-  # cargo-audit (looks for CVEs in dependencies), cargo-crev (Security reports and trust circles for crates), cargo-outdated (checks for out of date crates)
+  #rustfmt
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+            toolchain: stable
+            components: rustfmt
+            override: true
+      - uses: mbrobbel/rustfmt-check@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  # Cargo-audit, cargo-crev (Security reports and trust circles for crates), cargo-outdated (checks for out of date crates)
   security:
     name: Verify Crate and Dependency Security
     runs-on: ubuntu-latest

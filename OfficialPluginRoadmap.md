@@ -1,11 +1,11 @@
 # Official Plugins Roadmap
 
 ## Version 0.1.0
- - [ ] Base analyzer plugin
+ - [x] Base analyzer plugin
    - [x] Parses raw PCAP data to extract pcap data
    - [x] Puts parsed data into database table
    - [x] Documentation
-   - [ ] Tests
+   - [x] Tests
 
 ## Version 0.2.0
 - [ ] TCP Parsing
