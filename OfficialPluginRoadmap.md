@@ -1,13 +1,18 @@
 # Official Plugins Roadmap
 
 ## Version 0.1.0
- - [x] Base analyzer plugin
+ - [x] PCapParser
    - [x] Parses raw PCAP data to extract pcap data
    - [x] Puts parsed data into database table
    - [x] Documentation
    - [x] Tests
 
 ## Version 0.2.0
+- [ ] PCapParser
+  - [ ] Add column to table to contain hash of captured packet
+  - [ ] Check to ensure the packet isn't already in the table via its hash in order to allow users to avoid redundant data when re-running the same captures
+  - [ ] Update documentation
+  - [ ] Tests
 - [ ] TCP Parsing
   - [ ] Be able to identify TCP protocol packets
   - [ ] Be able to extract header information
