@@ -9,11 +9,6 @@ The framework roadmap can be found [here](FrameworkRoadmap.md)
 ## Plugins
 Eavesdropper performs packet analysis via plugins.
 
-### Creating a Plugin
-Required crates:
-* eframework
-* [abi_stable](https://crates.io/crates/abi_stable)
-
 ### Example Plugin Using [Diesel](https://diesel.rs/)
 Example code without comments can be found [here](example_plugin.rs)
 
