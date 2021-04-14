@@ -1,5 +1,5 @@
 [package]
-name = "pcap_parser"
+name = "eavesdropper_pcap_parser"
 version = "0.1.0"
 authors = ["Thomas Bye <ThomasBye1@gmail.com>"]
 edition = "2018"
