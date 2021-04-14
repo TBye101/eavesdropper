@@ -221,22 +221,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "77c90badedccf4105eca100756a0b1289e191f6fcbdadd3cee1d2f614f97da8f"
 
 [[package]]
-name = "eavesdropper_pcap_parser"
-version = "0.1.0"
-dependencies = [
- "abi_stable",
- "chrono",
- "diesel",
- "diesel_migrations",
- "dotenv",
- "eframework",
- "libc",
- "pcap 0.8.1",
- "semver 0.11.0",
-]
-
-[[package]]
-name = "ecli"
+name = "eavesdropper_cli"
 version = "0.1.0"
 dependencies = [
  "abi_stable",
@@ -249,6 +234,21 @@ dependencies = [
  "pcap 0.7.0",
  "petgraph",
  "rustyline",
+]
+
+[[package]]
+name = "eavesdropper_pcap_parser"
+version = "0.1.0"
+dependencies = [
+ "abi_stable",
+ "chrono",
+ "diesel",
+ "diesel_migrations",
+ "dotenv",
+ "eframework",
+ "libc",
+ "pcap 0.8.1",
+ "semver 0.11.0",
 ]
 
 [[package]]
