@@ -3,6 +3,12 @@ name = "ecli"
 version = "0.1.0"
 authors = ["Thomas Bye <ThomasBye1@gmail.com>"]
 edition = "2018"
+readme = "README.md"
+repository = "https://github.com/TBye101/eavesdropper"
+description = "A command line tool for capture and analyzing packets utilizing plugins."
+license= "GPL-3.0-only"
+keywords = ["plugin", "eavesdropper", "pcap", "packet-analyzer", "command-line-utilities"]
+categories = ["command-line-utilities"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -17,8 +23,9 @@ dotenv = "0.15.0"
 
 #My crates
 log_t = "0.1.0"
+
 #My crates and in this workspace
-eframework = { path = "../eframework" }
+eframework = { path = "../eframework", version = "0.1.0"}
 
 [dependencies.abi_stable]
 version = "0.9.3"
