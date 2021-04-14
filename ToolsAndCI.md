@@ -14,6 +14,7 @@ https://github.com/tokio-rs/tokio
 Reliability:
 https://github.com/anderejd/cargo-geiger Done
 https://github.com/Technolution/rustig Done
+https://crates.io/crates/no-panic
 https://github.com/rust-lang/miri
 https://gitlab.com/karroffel/contracts
 https://crates.io/crates/static_assertions
