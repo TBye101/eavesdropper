@@ -5,7 +5,8 @@ authors = ["Thomas Bye <ThomasBye1@gmail.com>"]
 edition = "2018"
 readme = "README.md"
 repository = "https://github.com/TBye101/eavesdropper"
-license= "GPL-3.0 License"
+license= "GPL-3.0-only"
+description = "A plugin for eavesdropper that converts pcap files into their metadata and puts them into a sql table"
 keywords = ["plugin", "eavesdropper", "pcap", "packet-analyzer"]
 categories = ["encoding", "parsing"]
 
