@@ -3,6 +3,11 @@ name = "pcap_parser"
 version = "0.1.0"
 authors = ["Thomas Bye <ThomasBye1@gmail.com>"]
 edition = "2018"
+readme = "README.md"
+repository = "https://github.com/TBye101/eavesdropper"
+license= "GPL-3.0 License"
+keywords = ["plugin", "eavesdropper", "pcap", "packet-analyzer"]
+categories = ["encoding", "parsing"]
 
 [lib]
 crate-type = ["cdylib", "rlib"]
