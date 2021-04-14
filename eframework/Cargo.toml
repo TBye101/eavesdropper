@@ -6,7 +6,7 @@ edition = "2018"
 readme = "README.md"
 repository = "https://github.com/TBye101/eavesdropper"
 description = "A common framework for eavesdropper to interact with its plugins"
-license= "GPL-3.0 License"
+license= "GPL-3.0-only"
 keywords = ["plugin", "eavesdropper", "pcap", "packet-analyzer", "library"]
 
 [dependencies]
