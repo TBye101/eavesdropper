@@ -55,20 +55,6 @@ jobs:
       - run: cargo install cargo-spellcheck
       - run: cargo spellcheck -m 255 #Fail the CI if there are spelling mistakes
 
-  #rustfmt
-  format:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-            toolchain: stable
-            components: rustfmt
-            override: true
-      - uses: mbrobbel/rustfmt-check@master
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
   # Cargo-audit, cargo-crev (Security reports and trust circles for crates), cargo-outdated (checks for out of date crates)
   security:
     name: Verify Crate and Dependency Security
@@ -80,10 +66,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
       - run: sudo apt-get install libpcap-dev
-      - run: cargo install cargo-crev
       - run: cargo install cargo-outdated
       - run: cargo outdated
-      - run: cargo crev crate verify --show-all
       
   # cargo-geiger (Checks for unsafe), rustig (Checks for panic! paths)
   reliability: 
