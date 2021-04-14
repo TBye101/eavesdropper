@@ -1,0 +1,1 @@
+Updated genemoji to support short version smilies
