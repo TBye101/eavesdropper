@@ -22,6 +22,7 @@ https://doc.rust-lang.org/nightly/unstable-book/compiler-flags/sanitizer.html
 
 Testing:
 https://github.com/altsysrq/proptest //Input / property tester
+https://crates.io/crates/quickcheck //Better than proptest?
 https://docs.rs/mockito/0.30.0/mockito/ //HTTP request mocking
 https://github.com/bheisler/criterion.rs //Benchmarking library
 https://crates.io/crates/cargo-tarpaulin //Code coverage tool

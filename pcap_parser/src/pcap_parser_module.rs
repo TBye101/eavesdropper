@@ -3,7 +3,7 @@ use dotenv::dotenv;
 use abi_stable::{export_root_module, prefix_type::PrefixTypeTrait, rvec, sabi_extern_fn, sabi_trait::prelude::TU_Opaque, std_types::{RString}};
 use eframework::{analysis_framework::{AnalysisModule, AnalysisModuleBox, AnalysisModule_TO, ModuleInfo, Plugin, Plugin_Ref}, rversion::RVersion};
 use diesel::{Connection, RunQueryDsl, pg::PgConnection};
-use pcap::{Capture, Offline};
+use pcap::{Capture, Offline, Packet};
 use crate::models::NewPacket;
 
 embed_migrations!();//Embed our Diesel migrations into this crate so we can run them upon beginning analysis later.
