@@ -6,7 +6,7 @@
    - [x] Add column to table to contain hash of captured packet
    - [x] Check to ensure the packet isn't already in the table via its hash in order to allow users to avoid redundant data when re-running the same captures
   - [x] Update documentation
-  - [ ] Tests
+  - [] Tests
 - [ ] TCP Parsing
   - [ ] Be able to identify TCP protocol packets
   - [ ] Be able to extract header information

@@ -1,5 +1,3 @@
-use diesel::sql_types::Text;
-
 use super::schema::packets_pcap_parser;
 
 //For what types bind to what SQL types:
