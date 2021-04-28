@@ -1,4 +1,7 @@
 # Eavesdropper
+
+[![dependency status](https://deps.rs/repo/github/tbye101/eavesdropper/status.svg)](https://deps.rs/repo/github/tbye101/eavesdropper)
+
 A packet sniffing and analyzing tool with a plugin system for analyzers. Currently only a cli tool, but will evolve into a large scale automated analysis tool.
 
 ## Roadmap

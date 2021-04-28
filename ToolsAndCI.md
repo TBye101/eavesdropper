@@ -15,6 +15,8 @@ https://github.com/async-rs/async-std
 
 https://github.com/tokio-rs/tokio
 
+https://github.com/est31/cargo-udeps //Detect unused crates
+
 Reliability:
 
 https://github.com/anderejd/cargo-geiger Done
