@@ -1,5 +1,5 @@
 # Eavesdropper
-A packet sniffing and analyzing tool with a plugin system for analyzers.
+A packet sniffing and analyzing tool with a plugin system for analyzers. Currently only a cli tool, but will evolve into a large scale automated analysis tool.
 
 ## Roadmap
 You can find the official plugin roadmap [here](OfficialPluginRoadmap.md)
@@ -9,8 +9,17 @@ The framework roadmap can be found [here](FrameworkRoadmap.md)
 ## Plugins
 Eavesdropper performs packet analysis via plugins.
 
-### Example Plugin Using [Diesel](https://diesel.rs/)
+### How to Make a Plugin
+This example will show how to make a plugin as well as use [Diesel](https://diesel.rs/) to interact with the shared SQL database.
+
 Example code without comments can be found [here](example_plugin.rs)
+***
+
+In your Cargo.toml file, this will have your library create a C assembly which is what is needed by the eavesdropper cli to load the plugin. The rust assembly is useful for if other plugins depend on the database tables created by your plugin, but don't want to redefine your Diesel table structs.
+``` TOML
+[lib]
+crate-type = ["cdylib", "rlib"]
+```
 
 These use statements are required to be a plugin as well as to use the basics of Diesel.
 ``` Rust

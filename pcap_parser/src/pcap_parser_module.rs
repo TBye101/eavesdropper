@@ -65,7 +65,7 @@ impl PCapParserModule {
             let stored_capture = Capture::from_file(file_name.clone());
             match stored_capture {
                 Err(e) => {
-                    println!("An error occured while parsing capture: {}", e.to_string());
+                    println!("An error occurred while parsing capture: {}", e.to_string());
                 },
                 Ok(capture) => {
                     self.parse_capture(connection, capture, &file_name);
