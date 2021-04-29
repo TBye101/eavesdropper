@@ -1,4 +1,4 @@
-use std::{env, time::{Instant}};
+use std::{collections::hash_map::DefaultHasher, env, hash::{Hash, Hasher}, time::{Instant}};
 use dotenv::dotenv;
 use abi_stable::{export_root_module, prefix_type::PrefixTypeTrait, rvec, sabi_extern_fn, sabi_trait::prelude::TU_Opaque, std_types::{RString}};
 use eframework::{analysis_framework::{AnalysisModule, AnalysisModuleBox, AnalysisModule_TO, ModuleInfo, Plugin, Plugin_Ref}, rversion::RVersion};
@@ -65,7 +65,7 @@ impl PCapParserModule {
             let stored_capture = Capture::from_file(file_name.clone());
             match stored_capture {
                 Err(e) => {
-                    println!("An error occured while parsing capture: {}", e.to_string());
+                    println!("An error occurred while parsing capture: {}", e.to_string());
                 },
                 Ok(capture) => {
                     self.parse_capture(connection, capture, &file_name);
@@ -86,11 +86,16 @@ impl PCapParserModule {
             packet_count += 1;
             let header = packet.header;
             let data = packet.data;
+            let mut hasher = DefaultHasher::new();
+            data.hash(&mut hasher);
+            let hashed_data = hasher.finish();
+
             let parsed_packet = NewPacket {
                 payload: data.to_vec(),
                 captured_timestamp: chrono::NaiveDateTime::from_timestamp(header.ts.tv_sec, 0),
                 capture_length: header.caplen as i32,
                 packet_length: header.len as i32,
+                payload_hash: hashed_data.to_string()
             };
 
             batch.push(parsed_packet);
@@ -115,7 +120,7 @@ impl PCapParserModule {
             .get_result::<crate::models::Packet>(connection);
         
             if insert.is_err() {
-                println!("Error inserting packets into database");
+                println!("Error inserting packets into database: {}", insert.err().unwrap());
             }
         }
     }

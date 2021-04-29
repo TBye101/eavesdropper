@@ -8,7 +8,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug",
-            "program": "${workspaceFolder}/target/debug/ecli",
+            "program": "${workspaceFolder}/target/debug/eavesdropper_cli",
             "args": [],
             "cwd": "${workspaceFolder}/target/debug",
             "env": {"RUST_BACKTRACE": "1"},

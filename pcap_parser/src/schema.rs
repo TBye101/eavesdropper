@@ -5,5 +5,6 @@ table! {
         captured_timestamp -> Timestamp,
         capture_length -> Int4,
         packet_length -> Int4,
+        payload_hash -> Varchar,
     }
 }

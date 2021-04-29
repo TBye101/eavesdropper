@@ -1,8 +1,10 @@
 use super::schema::packets_pcap_parser;
 
 //For what types bind to what SQL types:
-//https://docs.rs/diesel/1.4.5/diesel/deserialize/trait.FromSql.html#impl-FromSql%3CDatetime%2C%20Mysql%3E-for-MYSQL_TIME
-//How to add custom support: https://stackoverflow.com/questions/49092437/how-do-i-implement-queryable-and-insertable-for-custom-field-types-in-diesel
+//https://kotiri.com/2018/01/31/postgresql-diesel-rust-types.html
+
+//How to add custom support: 
+//https://stackoverflow.com/questions/49092437/how-do-i-implement-queryable-and-insertable-for-custom-field-types-in-diesel
 
 #[derive(Queryable)]
 pub struct Packet {
@@ -10,7 +12,8 @@ pub struct Packet {
     pub payload: Vec<u8>,
     pub captured_timestamp: chrono::NaiveDateTime,
     pub capture_length: i32,
-    pub packet_length: i32
+    pub packet_length: i32,
+    pub payload_hash: String
 }
 
 #[derive(Insertable)]
@@ -19,5 +22,6 @@ pub struct NewPacket {
     pub payload: Vec<u8>,
     pub captured_timestamp: chrono::NaiveDateTime,
     pub capture_length: i32,
-    pub packet_length: i32
+    pub packet_length: i32,
+    pub payload_hash: String
 }

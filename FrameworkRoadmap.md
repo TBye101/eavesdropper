@@ -23,6 +23,12 @@
   - [ ] Packets dropped due to OS or other issues for each interface
   - [ ] Documentation
   - [ ] Tests
+- [ ] Dashboards or Reports
+  - [ ] Some sort of way to build dashboards or reports
+  - [ ] Automatically update as data changes
+  - [ ] Can be saved
+  - [ ] Documentation
+  - [ ] Tests
 
 ## Version 0.3.0
 - [ ] Remote listeners
@@ -70,12 +76,7 @@
   - [ ] Analysis machine or analysis network can analyze packets as they are received
   - [ ] Document how to setup realtime analysis
   - [ ] Tests
-- [ ] Dashboards or Reports
-  - [ ] Some sort of way to build dashboards or reports
-  - [ ] Automatically update as data changes
-  - [ ] Can be saved
-  - [ ] Documentation
-  - [ ] Tests
+
 
 ## Version 0.7.0
 - [ ] Partial re-analysis
